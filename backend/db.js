@@ -12,7 +12,7 @@ const dbConfig = {
 };
 
 if (process.env.DB_SSL === 'true') {
-  dbConfig.ssl = { rejectUnauthorized: true };
+  dbConfig.ssl = { rejectUnauthorized: false };
 }
 
 const pool = mysql.createPool(dbConfig);
