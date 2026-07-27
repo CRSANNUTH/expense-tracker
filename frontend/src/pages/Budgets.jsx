@@ -11,7 +11,13 @@ function Budgets() {
   const [saving, setSaving] = useState(null);
 
   useEffect(() => {
-    api.get('/categories').then(res => setCategories(res.data));
+    api.get('/categories')
+      .then(res => setCategories(res.data))
+      .catch(() => {
+        setTimeout(() => {
+          api.get('/categories').then(res => setCategories(res.data));
+        }, 2000);
+      });
   }, []);
 
   useEffect(() => {

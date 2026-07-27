@@ -15,7 +15,13 @@ function AddExpense() {
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    api.get('/categories').then(res => setCategories(res.data));
+    api.get('/categories')
+      .then(res => setCategories(res.data))
+      .catch(() => {
+        setTimeout(() => {
+          api.get('/categories').then(res => setCategories(res.data));
+        }, 2000);
+      });
   }, []);
 
   const handleSubmit = async (e) => {
