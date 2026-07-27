@@ -1,14 +1,19 @@
 const mysql = require('mysql2/promise');
 
 async function seed() {
-  const connection = await mysql.createConnection({
+  const connectionConfig = {
     host: process.env.DB_HOST || 'localhost',
-    port: process.env.DB_PORT || 3306,
+    port: parseInt(process.env.DB_PORT) || 3306,
     user: process.env.DB_USER || 'root',
     password: process.env.DB_PASSWORD || 'Expense@123',
     multipleStatements: true
-  });
+  };
 
+  if (process.env.DB_SSL === 'true') {
+    connectionConfig.ssl = { rejectUnauthorized: true };
+  }
+
+  const connection = await mysql.createConnection(connectionConfig);
   const dbName = process.env.DB_NAME || 'expense_tracker';
 
   try {
@@ -77,6 +82,7 @@ async function seed() {
     console.log('Database setup complete!');
   } catch (error) {
     console.error('Seed error:', error.message);
+    process.exit(1);
   } finally {
     await connection.end();
   }
