@@ -19,6 +19,10 @@ app.use('/api/budgets', budgetsRouter);
 app.use('/api/expenses', expensesRouter);
 app.use('/api/dashboard', dashboardRouter);
 
+app.get('/', (req, res) => {
+  res.json({ status: 'Expense Tracker API is running' });
+});
+
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });
 });
