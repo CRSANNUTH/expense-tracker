@@ -68,7 +68,7 @@ function Budgets() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Monthly Budgets</h1>
         <div className="flex items-center gap-2">
           <select
@@ -103,48 +103,81 @@ function Budgets() {
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-          <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-200">
-              <tr>
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Category</th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Budget Amount (₹)</th>
-                <th className="text-right px-4 py-3 text-xs font-medium text-gray-500 uppercase">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {categories.map(cat => (
-                <tr key={cat.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-3">
-                    <span className="inline-flex items-center gap-2">
-                      <span className="text-xl">{cat.icon}</span>
-                      <span className="font-medium text-gray-800">{cat.name}</span>
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <input
-                      type="number"
-                      min="0"
-                      step="100"
-                      value={budgetInputs[cat.id] || ''}
-                      onChange={(e) => setBudgetInputs({ ...budgetInputs, [cat.id]: e.target.value })}
-                      className="border border-gray-300 rounded-lg px-3 py-2 w-40 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                      placeholder="0"
-                    />
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <button
-                      onClick={() => handleSave(cat.id)}
-                      disabled={saving === cat.id}
-                      className="bg-indigo-600 text-white px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50"
-                    >
-                      {saving === cat.id ? 'Saving...' : 'Save'}
-                    </button>
-                  </td>
+        <div className="space-y-3">
+          {/* Mobile card layout */}
+          <div className="md:hidden space-y-3">
+            {categories.map(cat => (
+              <div key={cat.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-xl">{cat.icon}</span>
+                  <span className="font-medium text-gray-800">{cat.name}</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="number"
+                    min="0"
+                    step="100"
+                    value={budgetInputs[cat.id] || ''}
+                    onChange={(e) => setBudgetInputs({ ...budgetInputs, [cat.id]: e.target.value })}
+                    className="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    placeholder="₹ Budget amount"
+                  />
+                  <button
+                    onClick={() => handleSave(cat.id)}
+                    disabled={saving === cat.id}
+                    className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50"
+                  >
+                    {saving === cat.id ? '...' : 'Save'}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop table layout */}
+          <div className="hidden md:block bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <table className="w-full">
+              <thead className="bg-gray-50 border-b border-gray-200">
+                <tr>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Category</th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Budget Amount (₹)</th>
+                  <th className="text-right px-4 py-3 text-xs font-medium text-gray-500 uppercase">Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {categories.map(cat => (
+                  <tr key={cat.id} className="hover:bg-gray-50">
+                    <td className="px-4 py-3">
+                      <span className="inline-flex items-center gap-2">
+                        <span className="text-xl">{cat.icon}</span>
+                        <span className="font-medium text-gray-800">{cat.name}</span>
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <input
+                        type="number"
+                        min="0"
+                        step="100"
+                        value={budgetInputs[cat.id] || ''}
+                        onChange={(e) => setBudgetInputs({ ...budgetInputs, [cat.id]: e.target.value })}
+                        className="border border-gray-300 rounded-lg px-3 py-2 w-40 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        placeholder="0"
+                      />
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <button
+                        onClick={() => handleSave(cat.id)}
+                        disabled={saving === cat.id}
+                        className="bg-indigo-600 text-white px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50"
+                      >
+                        {saving === cat.id ? 'Saving...' : 'Save'}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>

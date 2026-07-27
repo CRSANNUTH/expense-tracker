@@ -64,14 +64,14 @@ function Expenses() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Expenses</h1>
         <p className="text-lg font-semibold text-gray-600">
           Total: <span className="text-orange-600">₹{totalSpent.toLocaleString()}</span>
         </p>
       </div>
 
-      <div className="flex flex-wrap gap-3 mb-6">
+      <div className="flex flex-wrap gap-2 mb-6">
         <select
           value={month}
           onChange={(e) => setMonth(parseInt(e.target.value))}
@@ -111,81 +111,140 @@ function Expenses() {
           <p className="text-gray-500 text-lg">No expenses found for {monthNames[month - 1]} {year}.</p>
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-          <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-200">
-              <tr>
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Date</th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Category</th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Description</th>
-                <th className="text-right px-4 py-3 text-xs font-medium text-gray-500 uppercase">Amount</th>
-                <th className="text-right px-4 py-3 text-xs font-medium text-gray-500 uppercase">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {expenses.map(expense => (
-                <tr key={expense.id} className="hover:bg-gray-50">
-                  {editingId === expense.id ? (
-                    <>
-                      <td className="px-4 py-3">
-                        <input type="date" value={editForm.expense_date}
-                          onChange={(e) => setEditForm({ ...editForm, expense_date: e.target.value })}
-                          className="border rounded px-2 py-1 text-sm w-full" />
-                      </td>
-                      <td className="px-4 py-3">
-                        <select value={editForm.category_id}
-                          onChange={(e) => setEditForm({ ...editForm, category_id: e.target.value })}
-                          className="border rounded px-2 py-1 text-sm w-full">
-                          {categories.map(cat => (
-                            <option key={cat.id} value={cat.id}>{cat.name}</option>
-                          ))}
-                        </select>
-                      </td>
-                      <td className="px-4 py-3">
-                        <input type="text" value={editForm.description}
-                          onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
-                          className="border rounded px-2 py-1 text-sm w-full" />
-                      </td>
-                      <td className="px-4 py-3 text-right">
-                        <input type="number" value={editForm.amount}
-                          onChange={(e) => setEditForm({ ...editForm, amount: e.target.value })}
-                          className="border rounded px-2 py-1 text-sm w-20 text-right" />
-                      </td>
-                      <td className="px-4 py-3 text-right space-x-2">
-                        <button onClick={() => handleUpdate(expense.id)}
-                          className="text-green-600 hover:text-green-800 text-sm font-medium">Save</button>
-                        <button onClick={() => setEditingId(null)}
-                          className="text-gray-500 hover:text-gray-700 text-sm font-medium">Cancel</button>
-                      </td>
-                    </>
-                  ) : (
-                    <>
-                      <td className="px-4 py-3 text-sm text-gray-700">
+        <>
+          {/* Mobile card layout */}
+          <div className="md:hidden space-y-3">
+            {expenses.map(expense => (
+              <div key={expense.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+                {editingId === expense.id ? (
+                  <div className="space-y-3">
+                    <input type="date" value={editForm.expense_date}
+                      onChange={(e) => setEditForm({ ...editForm, expense_date: e.target.value })}
+                      className="w-full border rounded-lg px-3 py-2 text-sm" />
+                    <select value={editForm.category_id}
+                      onChange={(e) => setEditForm({ ...editForm, category_id: e.target.value })}
+                      className="w-full border rounded-lg px-3 py-2 text-sm">
+                      {categories.map(cat => (
+                        <option key={cat.id} value={cat.id}>{cat.name}</option>
+                      ))}
+                    </select>
+                    <input type="text" value={editForm.description}
+                      onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
+                      className="w-full border rounded-lg px-3 py-2 text-sm" placeholder="Description" />
+                    <input type="number" value={editForm.amount}
+                      onChange={(e) => setEditForm({ ...editForm, amount: e.target.value })}
+                      className="w-full border rounded-lg px-3 py-2 text-sm" placeholder="Amount" />
+                    <div className="flex gap-2">
+                      <button onClick={() => handleUpdate(expense.id)}
+                        className="flex-1 bg-green-600 text-white py-2 rounded-lg text-sm font-medium">Save</button>
+                      <button onClick={() => setEditingId(null)}
+                        className="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg text-sm font-medium">Cancel</button>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="inline-flex items-center gap-1.5">
+                        <span>{expense.category_icon}</span>
+                        <span className="font-medium text-gray-800 text-sm">{expense.category_name}</span>
+                      </span>
+                      <span className="font-bold text-gray-900">₹{parseFloat(expense.amount).toLocaleString()}</span>
+                    </div>
+                    <p className="text-sm text-gray-500 mb-1">{expense.description || 'No description'}</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-gray-400">
                         {new Date(expense.expense_date).toLocaleDateString('en-IN')}
-                      </td>
-                      <td className="px-4 py-3 text-sm">
-                        <span className="inline-flex items-center gap-1.5">
-                          <span>{expense.category_icon}</span>
-                          <span className="text-gray-700">{expense.category_name}</span>
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-sm text-gray-600">{expense.description || '-'}</td>
-                      <td className="px-4 py-3 text-sm text-right font-medium text-gray-900">
-                        ₹{parseFloat(expense.amount).toLocaleString()}
-                      </td>
-                      <td className="px-4 py-3 text-right space-x-2">
+                      </span>
+                      <div className="space-x-3">
                         <button onClick={() => handleEdit(expense)}
-                          className="text-indigo-600 hover:text-indigo-800 text-sm font-medium">Edit</button>
+                          className="text-indigo-600 text-sm font-medium">Edit</button>
                         <button onClick={() => handleDelete(expense.id)}
-                          className="text-red-600 hover:text-red-800 text-sm font-medium">Delete</button>
-                      </td>
-                    </>
-                  )}
+                          className="text-red-600 text-sm font-medium">Delete</button>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop table layout */}
+          <div className="hidden md:block bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <table className="w-full">
+              <thead className="bg-gray-50 border-b border-gray-200">
+                <tr>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Date</th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Category</th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Description</th>
+                  <th className="text-right px-4 py-3 text-xs font-medium text-gray-500 uppercase">Amount</th>
+                  <th className="text-right px-4 py-3 text-xs font-medium text-gray-500 uppercase">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {expenses.map(expense => (
+                  <tr key={expense.id} className="hover:bg-gray-50">
+                    {editingId === expense.id ? (
+                      <>
+                        <td className="px-4 py-3">
+                          <input type="date" value={editForm.expense_date}
+                            onChange={(e) => setEditForm({ ...editForm, expense_date: e.target.value })}
+                            className="border rounded px-2 py-1 text-sm w-full" />
+                        </td>
+                        <td className="px-4 py-3">
+                          <select value={editForm.category_id}
+                            onChange={(e) => setEditForm({ ...editForm, category_id: e.target.value })}
+                            className="border rounded px-2 py-1 text-sm w-full">
+                            {categories.map(cat => (
+                              <option key={cat.id} value={cat.id}>{cat.name}</option>
+                            ))}
+                          </select>
+                        </td>
+                        <td className="px-4 py-3">
+                          <input type="text" value={editForm.description}
+                            onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
+                            className="border rounded px-2 py-1 text-sm w-full" />
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          <input type="number" value={editForm.amount}
+                            onChange={(e) => setEditForm({ ...editForm, amount: e.target.value })}
+                            className="border rounded px-2 py-1 text-sm w-20 text-right" />
+                        </td>
+                        <td className="px-4 py-3 text-right space-x-2">
+                          <button onClick={() => handleUpdate(expense.id)}
+                            className="text-green-600 hover:text-green-800 text-sm font-medium">Save</button>
+                          <button onClick={() => setEditingId(null)}
+                            className="text-gray-500 hover:text-gray-700 text-sm font-medium">Cancel</button>
+                        </td>
+                      </>
+                    ) : (
+                      <>
+                        <td className="px-4 py-3 text-sm text-gray-700">
+                          {new Date(expense.expense_date).toLocaleDateString('en-IN')}
+                        </td>
+                        <td className="px-4 py-3 text-sm">
+                          <span className="inline-flex items-center gap-1.5">
+                            <span>{expense.category_icon}</span>
+                            <span className="text-gray-700">{expense.category_name}</span>
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-600">{expense.description || '-'}</td>
+                        <td className="px-4 py-3 text-sm text-right font-medium text-gray-900">
+                          ₹{parseFloat(expense.amount).toLocaleString()}
+                        </td>
+                        <td className="px-4 py-3 text-right space-x-2">
+                          <button onClick={() => handleEdit(expense)}
+                            className="text-indigo-600 hover:text-indigo-800 text-sm font-medium">Edit</button>
+                          <button onClick={() => handleDelete(expense.id)}
+                            className="text-red-600 hover:text-red-800 text-sm font-medium">Delete</button>
+                        </td>
+                      </>
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
       )}
     </div>
   );

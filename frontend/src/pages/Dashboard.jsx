@@ -39,7 +39,7 @@ function Dashboard() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
         <div className="flex items-center gap-2">
           <select
@@ -65,25 +65,25 @@ function Dashboard() {
 
       {data && (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
               <p className="text-sm text-gray-500 mb-1">Total Budget</p>
-              <p className="text-2xl font-bold text-gray-900">₹{data.total_budget.toLocaleString()}</p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-900">₹{data.total_budget.toLocaleString()}</p>
             </div>
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
               <p className="text-sm text-gray-500 mb-1">Total Spent</p>
-              <p className="text-2xl font-bold text-orange-600">₹{data.total_spent.toLocaleString()}</p>
+              <p className="text-xl sm:text-2xl font-bold text-orange-600">₹{data.total_spent.toLocaleString()}</p>
             </div>
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
               <p className="text-sm text-gray-500 mb-1">Remaining</p>
-              <p className={`text-2xl font-bold ${data.remaining >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+              <p className={`text-xl sm:text-2xl font-bold ${data.remaining >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                 ₹{data.remaining.toLocaleString()}
               </p>
             </div>
           </div>
 
           <h2 className="text-lg font-semibold text-gray-800 mb-4">Category Breakdown</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {data.categories
               .filter(cat => cat.budget_amount > 0 || cat.spent_amount > 0)
               .map(category => (
